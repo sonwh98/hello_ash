@@ -17,11 +17,8 @@ impl VulkanApp {
 
 fn main() {
     let event_loop = EventLoop::new();
-    let window = WindowBuilder::new()
-        .with_title("Triangle Foobar")
-        .build(&event_loop)
-        .unwrap();
-
+    let window = VulkanApp::init_window(&event_loop);
+    
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
         match event {
