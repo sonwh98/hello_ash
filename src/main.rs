@@ -46,7 +46,7 @@ fn main() {
                 x => println!("other {:?}", x),
             },
 
-            foo => println!("foo {:?}", foo),
+            _ => (),
         }
     });
 }
