@@ -7,6 +7,11 @@ use winit::{
 use ash::extensions::ext::DebugUtils;
 use ash::{vk, Entry, Instance};
 
+#[cfg(any(target_os = "macos", target_os = "ios"))]
+use ash::vk::{
+    KhrGetPhysicalDeviceProperties2Fn, KhrPortabilityEnumerationFn, KhrPortabilitySubsetFn,
+};
+
 use raw_window_handle::HasRawDisplayHandle;
 use std::ffi::CStr;
 use std::os::raw::c_char;
@@ -48,7 +53,13 @@ impl VulkanApp {
                 ash_window::enumerate_required_extensions(window.raw_display_handle())
                     .unwrap()
                     .to_vec();
-            extension_names.push(DebugUtils::name().as_ptr());
+
+            #[cfg(any(target_os = "macos", target_os = "ios"))]
+            {
+                extension_names.push(KhrPortabilityEnumerationFn::name().as_ptr());
+                // Enabling this extension is a requirement when using `VK_KHR_portability_subset`
+                extension_names.push(KhrGetPhysicalDeviceProperties2Fn::name().as_ptr());
+            }
 
             let create_flags = if cfg!(any(target_os = "macos", target_os = "ios")) {
                 vk::InstanceCreateFlags::ENUMERATE_PORTABILITY_KHR
