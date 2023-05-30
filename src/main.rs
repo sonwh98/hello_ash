@@ -4,13 +4,10 @@ use winit::{
     window::WindowBuilder,
 };
 
-use ash::extensions::ext::DebugUtils;
 use ash::{vk, Entry, Instance};
 
 #[cfg(any(target_os = "macos", target_os = "ios"))]
-use ash::vk::{
-    KhrGetPhysicalDeviceProperties2Fn, KhrPortabilityEnumerationFn, KhrPortabilitySubsetFn,
-};
+use ash::vk::{KhrGetPhysicalDeviceProperties2Fn, KhrPortabilityEnumerationFn};
 
 use raw_window_handle::HasRawDisplayHandle;
 use std::ffi::CStr;
@@ -86,9 +83,7 @@ impl VulkanApp {
     }
 
     fn run(self) {
-        let event_loop = self.event_loop;
-
-        event_loop.run(move |event, _, control_flow| {
+        self.event_loop.run(move |event, _, control_flow| {
             *control_flow = ControlFlow::Wait;
 
             match event {
